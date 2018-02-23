@@ -12,7 +12,7 @@ To build the library and manage dependencies, we use [CMake](https://cmake.org/)
    * [glog](https://github.com/google/glog) (version 0.3.4 and higher), and
    * [cnmem](https://github.com/NVIDIA/cnmem).
 
-The tests are implemented using the [googletest and googlemock](https://github.com/google/googletest) frameworks, which CMake will fetch and compile automatically as part of the build pipeline. Finally, you need a CUDA-compatible GPU in order to perfrom any computations.
+The tests are implemented using the [googletest and googlemock](https://github.com/google/googletest) frameworks, which CMake will fetch and compile automatically as part of the build pipeline. Finally, you need a CUDA-compatible GPU in order to perform any computations.
 
 To install `device_matrix`, the following instructions should get you started.
 
