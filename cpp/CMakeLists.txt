@@ -22,4 +22,4 @@ target_link_libraries(device_matrix_tests device_matrix_debug ${TEST_LIBRARIES})
 add_test(NAME device_matrix_tests COMMAND device_matrix_tests)
 
 # Installation rules for library binary.
-install(TARGETS device_matrix DESTINATION lib)
+install(TARGETS device_matrix device_matrix_debug DESTINATION lib)
