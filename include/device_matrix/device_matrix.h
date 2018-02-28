@@ -38,6 +38,14 @@
 #include "streams.h"
 #include "runtime.h"
 
+// Slow implementation of atomicAdd for double-precision; only available in debug mode.
+#ifndef NDEBUG
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+#else
+__device__ double atomicAdd(double* address, double val);
+#endif
+#endif
+
 namespace cuda {
 
 // Forward declarations.
@@ -64,14 +72,6 @@ cudaStream_t merge_streams(const cudaStream_t first,
 template <typename FloatT, typename IteratorT>
 thrust::transform_iterator<func::scale_by_constant<FloatT>, IteratorT>
 make_scalar_multiplication_iterator(IteratorT it, const FloatT scalar);
-
-// Slow implementation of atomicAdd for double-precision; only available in debug mode.
-#ifndef NDEBUG
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-#else
-__device__ double atomicAdd(float64* address, float64 val);
-#endif
-#endif
 
 template <typename FloatT>
 class device_matrix {
