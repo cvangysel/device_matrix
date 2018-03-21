@@ -3,39 +3,41 @@ project (device_matrix)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/third_party)
 
-find_package(CUDA REQUIRED)
-find_package(Glog REQUIRED)
+find_package(CUDA 7.0 REQUIRED)
+find_package(ExtraCUDA REQUIRED) # nvToolsExt
+find_package(Glog 0.3.4 REQUIRED)
 
-MESSAGE(STATUS "CUDA: " ${CUDA_LIBRARIES} " " ${CUDA_INCLUDE_DIRS})
-MESSAGE(STATUS "GLog: " ${GLOG_LIBRARIES})
+function(add_external_src TARGET_NAME MODULE_NAME)
+    if(NOT TARGET ${TARGET_NAME})
+        configure_file(third_party/${MODULE_NAME}-CMakeLists.txt
+                       ${MODULE_NAME}-download/CMakeLists.txt)
+        execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_NAME}-download )
+        execute_process(COMMAND ${CMAKE_COMMAND} --build .
+          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_NAME}-download )
 
-if(NOT TARGET gtest)
-    # Adapted from http://crascit.com/2015/07/25/cmake-gtest/.
-    configure_file(third_party/googletest-CMakeLists.txt googletest-download/CMakeLists.txt)
-    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-    execute_process(COMMAND ${CMAKE_COMMAND} --build .
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+        # Prevent GoogleTest from overriding our compiler/linker options
+        # when building with Visual Studio
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-    # Prevent GoogleTest from overriding our compiler/linker options
-    # when building with Visual Studio
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/${MODULE_NAME}-src
+                         ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_NAME}-build
+                         EXCLUDE_FROM_ALL)
+    endif(NOT TARGET ${TARGET_NAME})
+endfunction()
 
-    # Add googletest directly to our build. This adds
-    # the following targets: gtest, gtest_main, gmock
-    # and gmock_main
-    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-                     EXCLUDE_FROM_ALL)
-endif(NOT TARGET gtest)
+add_external_src(gtest googletest)
+add_external_src(cnmem cnmem)
 
 set(LIBRARIES
-    -lglog
-    -lcublas -lcudart -lnvToolsExt -lcnmem
+    cnmem
+    ${CUDA_LIBRARIES}
+    ${CUDA_CUBLAS_LIBRARIES}
+    ${EXTRACUDA_LIBRARIES}
+    ${GLOG_LIBRARIES}
     ${CUDA_LIBRARIES} ${GLOG_LIBRARIES})
 
-set(TEST_LIBRARIES
-    gtest_main gmock ${LIBRARIES})
+set(TEST_LIBRARIES gtest_main gmock ${LIBRARIES})
 
 set(CMAKE_CXX_FLAGS
     "-std=c++11 -march=native -O3 -funroll-loops")
@@ -49,8 +51,8 @@ set(CUDA_SEPARABLE_COMPILATION ON)
 SET(INCLUDE_DIRS
     "${gtest_SOURCE_DIR}/include"
     "${gmock_SOURCE_DIR}/include"
-    ${GLOG_INCLUDE_DIRS}
     ${CUDA_TOOLKIT_ROOT_DIR}/samples/common/inc
+    ${GLOG_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
 )
 
