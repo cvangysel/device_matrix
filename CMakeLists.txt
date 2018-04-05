@@ -51,6 +51,7 @@ set(CUDA_SEPARABLE_COMPILATION ON)
 SET(INCLUDE_DIRS
     "${gtest_SOURCE_DIR}/include"
     "${gmock_SOURCE_DIR}/include"
+    "${cnmem_SOURCE_DIR}/include"
     ${CUDA_TOOLKIT_ROOT_DIR}/samples/common/inc
     ${GLOG_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}

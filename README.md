@@ -8,11 +8,10 @@ Requirements & installation
 
 To build the library and manage dependencies, we use [CMake](https://cmake.org/) (version 3.5 and higher). In addition, we rely on the following libraries:
 
-   * [CUDA](https://developer.nvidia.com/cuda-zone) (version 8 and higher preferred),
-   * [glog](https://github.com/google/glog) (version 0.3.4 and higher), and
-   * [cnmem](https://github.com/NVIDIA/cnmem).
+   * [CUDA](https://developer.nvidia.com/cuda-zone) (version 8 and higher preferred), and
+   * [glog](https://github.com/google/glog) (version 0.3.4 and higher).
 
-The tests are implemented using the [googletest and googlemock](https://github.com/google/googletest) frameworks, which CMake will fetch and compile automatically as part of the build pipeline. Finally, you need a CUDA-compatible GPU in order to perform any computations.
+The [cnmem](https://github.com/NVIDIA/cnmem) library is used for memory management. The tests are implemented using the [googletest and googlemock](https://github.com/google/googletest) frameworks. CMake will fetch and compile these libraries automatically as part of the build pipeline. Finally, you need a CUDA-compatible GPU in order to perform any computations.
 
 To install `device_matrix`, the following instructions should get you started.
 
