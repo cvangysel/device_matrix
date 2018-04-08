@@ -3,7 +3,7 @@ project (device_matrix)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/third_party)
 
-find_package(CUDA 7.0 REQUIRED)
+find_package(CUDA 8.0 REQUIRED)
 find_package(ExtraCUDA REQUIRED) # nvToolsExt
 find_package(Glog 0.3.4 REQUIRED)
 

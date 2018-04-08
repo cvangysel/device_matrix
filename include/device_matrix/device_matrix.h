@@ -38,14 +38,6 @@
 #include "streams.h"
 #include "runtime.h"
 
-// Slow implementation of atomicAdd for double-precision; only available in debug mode.
-#ifndef NDEBUG
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-#else
-__device__ double atomicAdd(double* address, double val);
-#endif
-#endif
-
 namespace cuda {
 
 // Forward declarations.
