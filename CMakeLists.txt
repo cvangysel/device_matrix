@@ -35,17 +35,12 @@ set(LIBRARIES
     ${CUDA_CUBLAS_LIBRARIES}
     ${EXTRACUDA_LIBRARIES}
     ${GLOG_LIBRARIES}
-    ${CUDA_LIBRARIES} ${GLOG_LIBRARIES})
+    ${GLOG_LIBRARIES})
 
 set(TEST_LIBRARIES gtest_main gmock ${LIBRARIES})
 
 set(CMAKE_CXX_FLAGS
     "-std=c++11 -march=native -O3 -funroll-loops")
-
-set(CUDA_NVCC_FLAGS
-    ${CUDA_NVCC_FLAGS};
-    -arch=sm_52 --relocatable-device-code=true --cudart=shared -use_fast_math -O3 -default-stream per-thread)
-set(CUDA_SEPARABLE_COMPILATION ON)
 
 # Circuimvent CMake here (include_directories) as it seems unable to pass SYSTEM include paths to NVCC.
 SET(INCLUDE_DIRS
